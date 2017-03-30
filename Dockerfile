@@ -20,7 +20,7 @@ RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/config
 
 USER root
 
-RUN chown -R jboss.0 /opt/jboss
+RUN chown -R jboss.0 /opt/jboss && chmod -R 770 /opt/jboss
 
 USER jboss
 

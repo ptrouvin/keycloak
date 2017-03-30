@@ -1,0 +1,100 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name:  "keycloak-openshift-docker-image"
+  annotations:
+    description: Build and deploy a pod from a git dockerfile
+    tags: dockerfile
+labels:
+  # list of labels that are applied to every object during the template to config transformation
+  template: from-git-dockerfile
+
+# Parameters
+parameters:
+- name: APPLICATION_NAME
+  description: The name of the application
+  value: keycloak
+- name: GITHUB_REPO
+  description: the path to github registry
+  value: keycloak
+- name: GIT_REF
+  description: The Git Ref (branch)
+  value: master
+- name: KEYCLOAK_NAME
+  description: The name of the keycloak
+  value: keycloak
+- name: KEYCLOAK_VERSION
+  description: The version of the keycloak, look at https://hub.docker.com/r/jboss/keycloak/tags/
+  value: latest
+
+# Objects : ImageStream, BuildConfig, DeploymentConfig, ...
+objects:
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: ${APPLICATION_NAME}
+  labels:
+    application: ${APPLICATION_NAME}
+  spec:
+    tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: ${APPLICATION_NAME}:latest
+
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: ${APPLICATION_NAME}
+  labels:
+    application: ${APPLICATION_NAME}
+  spec:
+    source:
+      type: "Git"
+      git:
+        uri: git@github.com:ptrouvin/${GITHUB_REPO}.git
+        ref: ${GIT_REF}
+      secrets:
+      sourceSecret:
+        name: sshkeys
+    strategy:
+      type: Docker
+      dockerStrategy:
+        kind: DockerImage
+    output:
+      to:
+        kind: "ImageStreamTag"
+        name: ${APPLICATION_NAME}:latest
+
+- kind: "DeploymentConfig"
+  apiVersion: "v1"
+  metadata:
+    name: ${APPLICATION_NAME}
+    labels:
+      application:  ${APPLICATION_NAME}
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${APPLICATION_NAME}
+    strategy:
+      type: "Rolling"
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ${APPLICATION_NAME}
+          application: ${APPLICATION_NAME}
+      spec:
+        containers:
+        - name: ${APPLICATION_NAME}
+          image: ${APPLICATION_NAME}:latest
+    triggers:
+      - type: "ConfigChange"
+      - type: "ImageChange"
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - ${APPLICATION_NAME}
+          from:
+            kind: "ImageStreamTag"
+            name: ${APPLICATION_NAME}:latest
+
