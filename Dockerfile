@@ -16,7 +16,13 @@ RUN cd /opt/jboss/ && curl -qL https://downloads.jboss.org/keycloak/$KEYCLOAK_VE
 ADD docker-entrypoint.sh /opt/jboss/
 
 ADD setLogLevel.xsl /opt/jboss/keycloak/
-RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml -xsl:/opt/jboss/keycloak/setLogLevel.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml && chown -R jboss.0 /opt/jboss
+RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml -xsl:/opt/jboss/keycloak/setLogLevel.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml
+
+USER root
+
+RUN chown -R jboss.0 /opt/jboss
+
+USER jboss
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
