@@ -1,0 +1,91 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: keycloak-openshift-docker-image
+      application: keycloak
+      template: from-git-dockerfile
+    name: keycloak
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: keycloak
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: keycloak-openshift-docker-image
+          application: keycloak
+          deploymentconfig: keycloak
+      spec:
+        containers:
+        - image: 172.30.194.72:5000/test-pascal/keycloak@sha256:178e9b22ba6bbb14445dc07a1eaf22ca7a9001af872e22e69e1b084b66b900fb
+          imagePullPolicy: Always
+          name: keycloak
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - keycloak
+        from:
+          kind: ImageStreamTag
+          name: keycloak:latest
+          namespace: test-pascal
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: keycloak-openshift-docker-image
+      template: from-git-dockerfile
+    name: keycloak
+  spec:
+    ports:
+    - name: tcp-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: keycloak
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}

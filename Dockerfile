@@ -9,7 +9,7 @@ ENV KEYCLOAK_PASSWORD admin
 
 USER root
 
-RUN yum install -y epel-release && yum install -y jq xmlstarlet&& yum clean all
+RUN yum install -y epel-release && yum install -y jq xmlstarlet ca-certificates && update-ca-trust force-enable && yum clean all
 
 USER jboss
 

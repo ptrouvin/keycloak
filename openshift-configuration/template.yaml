@@ -98,3 +98,15 @@ objects:
             kind: "ImageStreamTag"
             name: ${APPLICATION_NAME}:latest
 
+- kind: "Service"
+  apiVersion: "v1"
+  metadata:
+    name: ${APPLICATION_NAME}      
+  spec:
+    selector:                  
+      deploymentconfig: ${APPLICATION_NAME}
+    ports:
+    - name: tcp-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
