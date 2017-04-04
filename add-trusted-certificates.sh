@@ -29,11 +29,11 @@ while [ -n "$1" ]; do
 	shift
 	i=$[ $i + 1 ]
 done
-for crt in $(ls -1 /*crt); do
-	echo "Add certificate to trusted CA from file '$crt'"
-	openssl x509 -in $crt -noout -subject -dates
-	cp $crt $CADIR/
-done
+# for crt in $(ls -1 /*crt); do
+	# echo "Add certificate to trusted CA from file '$crt'"
+	# openssl x509 -in $crt -noout -subject -dates
+	# cp $crt $CADIR/
+# done
 update-ca-certificates
 
 exit 0
