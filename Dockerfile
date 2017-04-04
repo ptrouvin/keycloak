@@ -34,7 +34,7 @@ USER root
 
 RUN chown -R jboss.0 /opt/jboss && chmod -R 770 /opt/jboss
 
-#USER jboss
+USER jboss
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
