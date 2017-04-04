@@ -21,7 +21,7 @@ if [ "$CA" ]; then
 	openssl x509 -in $CADIR/ca.crt -noout -subject -dates
 fi
 i=1
-while -n "$1"; do
+while [ -n "$1" ]; do
 	fn="ca$i.crt"
 	echo "Add certificate to trusted CA from argument $i.$fn = '$1'"
 	echo "$1" > $CADIR/$fn
