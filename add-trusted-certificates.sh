@@ -1,7 +1,5 @@
 #/bin/bash
 
-set -x
-
 # add-trusted-certificates.sh
 #
 # export to ca-trust X509 certificates
@@ -9,6 +7,38 @@ set -x
 # or passed as arguments "....PEM.FORMAT..." "....PEM...." ...
 #
 # you can also use a CHECK_CURL (environment variable) = url to check
+
+usage() {
+	cat - 1>&2 <<EOF;
+Usage: $0 options arguments
+
+with options:
+-d    for debug
+-c "curl URL to check"
+
+with arguments:
+"...X509.PEM..." ...
+EOF
+	exit 1; 
+}
+
+CHECK_CURL="$CHECK_CURL"
+
+while getopts "d+c:" o; do
+    case "${o}" in
+        d)
+			set -x
+            ;;
+        c)
+            CHECK_CURL="${OPTARG}"
+			echo "set CHECK_CURL=\"$CHECK_CURL\""
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
 
 yum -y install ca-certificates openssl && yum clean all
 
@@ -55,7 +85,6 @@ if [ -n "$CHECK_CURL" ]; then
 		echo "curl check failed! '$CHECK_CURL'"
 		exit 2
 	fi
-	set +x
 fi
 
 exit 0
