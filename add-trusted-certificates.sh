@@ -20,7 +20,7 @@ if [ "$CA" ]; then
 	echo "$CA" > $CADIR/ca.crt
 	openssl x509 -in $CADIR/ca.crt -noout -subject -dates
 fi
-for crt in ls -1 /*crt; do
+for crt in $(ls -1 /*crt); do
 	echo "Add certificate to trusted CA from file '$crt'"
 	openssl x509 -in $crt -noout -subject -dates
 	cp $crt $CADIR/
