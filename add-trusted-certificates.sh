@@ -10,7 +10,7 @@
 
 usage() {
 	cat - 1>&2 <<EOF;
-Usage: $0 options arguments
+Usage: $0 options -- arguments
 
 with options:
 -d    for debug
@@ -18,6 +18,9 @@ with options:
 
 with arguments:
 "...X509.PEM..." ...
+
+IMPORTANT: always add '--' before inserting your certificates, otherwise the '------' used by PEM format will be badly interpreted by getopt
+
 EOF
 	exit 1; 
 }
