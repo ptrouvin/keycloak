@@ -1,5 +1,7 @@
 FROM jboss/base-jdk:8
 
+ARG CA=""
+
 ENV KEYCLOAK_VERSION 3.0.0.Final
 # Enables signals getting passed from startup script to JVM
 # ensuring clean shutdown when container is stopped.
