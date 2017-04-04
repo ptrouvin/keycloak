@@ -1,5 +1,15 @@
 #/bin/bash
 
+set -x
+
+# add-trusted-certificates.sh
+#
+# export to ca-trust X509 certificates
+# they can be assigned to CA environment variable
+# or passed as arguments "....PEM.FORMAT..." "....PEM...." ...
+#
+# you can also use a CHECK_CURL (environment variable) = url to check
+
 yum -y install ca-certificates openssl && yum clean all
 
 . /etc/os-release
@@ -38,6 +48,14 @@ done
 # done
 $UPDATE_CA_COMMAND
 
-
+if [ -n "$CHECK_CURL" ]; then
+	set -x
+	curl -v "$CHECK_CURL"
+	if [ $? != 0 ]; then
+		echo "curl check failed! '$CHECK_CURL'"
+		exit 2
+	fi
+	set +x
+fi
 
 exit 0
