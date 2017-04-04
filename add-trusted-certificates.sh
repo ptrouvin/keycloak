@@ -27,7 +27,7 @@ while [ -n "$1" ]; do
 	echo "$1" > $CADIR/$fn
 	openssl x509 -in $CADIR/$fn -noout -subject -dates
 	shift
-	i=$[[ $i + 1 ]]
+	i=$[ $i + 1 ]
 done
 for crt in $(ls -1 /*crt); do
 	echo "Add certificate to trusted CA from file '$crt'"
