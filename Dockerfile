@@ -13,7 +13,7 @@ USER root
 
 ADD add-trusted-certificates.sh /opt/jboss
 
-RUN yum install -y epel-release && yum install -y jq xmlstarlet && yum clean all && ./add-trusted-certificates.sh -d -c "$CHECK_CURL" -- "$CA"
+RUN yum install -y epel-release && yum install -y jq xmlstarlet && yum clean all && ./add-trusted-certificates.sh -c "$CHECK_CURL" -- "$CA"
 
 USER jboss
 

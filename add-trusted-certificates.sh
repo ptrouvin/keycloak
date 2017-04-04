@@ -85,7 +85,8 @@ if [ -n "$CHECK_CURL" ]; then
 	set -x
 	curl -v "$CHECK_CURL"
 	# return code 67: TLS bind is successfull but : curl: (67) LDAP remote: bind failed Success anonymous bind disallowed
-	if [ $? != 0 -a $?!=67 ]; then
+	rc=$?
+	if [ $rc != 67 -a $rc != 0 ]; then
 		echo "curl check failed! '$CHECK_CURL'"
 		exit 2
 	fi
