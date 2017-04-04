@@ -1,13 +1,15 @@
 #/bin/bash
 
 yum -y install ca-certificates openssl && yum clean all
-update-ca-trust force-enable
 
 . /etc/os-release
 if   [ "$ID" = "centos" ]; then
 	CADIR="/etcpki/ca-trus-source/anchors"
+	update-ca-trust force-enable
+	UPDATE_CA_COMMAND="update-ca-trust extract"
 elif [ "$ID" = "ubuntu" ]; then
 	CADIR="/usr/local/share/ca-certificates"
+	UPDATE_CA_COMMAND="update-ca-certificates"
 else
 	echo "$0: ERROR: UNKNOWN OS '$ID'"
 	exit 1
@@ -34,6 +36,6 @@ done
 	# openssl x509 -in $crt -noout -subject -dates
 	# cp $crt $CADIR/
 # done
-update-ca-certificates
+$UPDATE_CA_COMMAND
 
 exit 0
