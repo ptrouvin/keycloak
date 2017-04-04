@@ -4,7 +4,7 @@ yum -y install ca-certificates openssl && yum clean all
 
 . /etc/os-release
 if   [ "$ID" = "centos" ]; then
-	CADIR="/etcpki/ca-trus-source/anchors"
+	CADIR="/etc/pki/ca-trust/source/anchors"
 	update-ca-trust force-enable
 	UPDATE_CA_COMMAND="update-ca-trust"
 elif [ "$ID" = "ubuntu" ]; then
@@ -37,5 +37,7 @@ done
 	# cp $crt $CADIR/
 # done
 $UPDATE_CA_COMMAND
+
+
 
 exit 0
