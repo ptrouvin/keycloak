@@ -14,7 +14,7 @@ RUN yum install -y epel-release && yum install -y jq xmlstarlet && yum clean all
 
 ADD add-trusted-certificates.sh /opt/jboss
 
-RUN ./add-trusted-certificates.sh
+RUN ./add-trusted-certificates.sh "$CA"
 
 USER jboss
 

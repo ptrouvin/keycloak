@@ -20,6 +20,16 @@ if [ "$CA" ]; then
 	echo "$CA" > $CADIR/ca.crt
 	openssl x509 -in $CADIR/ca.crt -noout -subject -dates
 fi
+i=1
+while -n "$1"; do
+	fn="ca$i.crt"
+	echo "Add certificate to trusted CA from argument $i.$fn = '$1'"
+	echo "$1" > $CADIR/$fn
+	openssl x509 -in $CADIR/$fn -noout -subject -dates
+	cp $fn $CADIR/
+	shift
+	i=$[[ $i + 1 ]]
+done
 for crt in $(ls -1 /*crt); do
 	echo "Add certificate to trusted CA from file '$crt'"
 	openssl x509 -in $crt -noout -subject -dates
