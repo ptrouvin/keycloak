@@ -1,6 +1,7 @@
 FROM jboss/base-jdk:8
 
-ARG CA=""
+# build argument: docker build keycloak --build-arg=".......X509 CERTIFICATE BASE64......"
+ARG CA
 
 ENV KEYCLOAK_VERSION 3.0.0.Final
 # Enables signals getting passed from startup script to JVM
