@@ -1,6 +1,6 @@
 FROM jboss/base-jdk:8
 
-# build argument: docker build keycloak --build-arg=".......X509 CERTIFICATE BASE64......"
+# build argument: docker build keycloak --build-arg CA=".......X509 CERTIFICATE BASE64......"
 ARG CA
 
 ENV KEYCLOAK_VERSION 3.0.0.Final

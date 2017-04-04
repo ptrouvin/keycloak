@@ -26,7 +26,6 @@ while [ -n "$1" ]; do
 	echo "Add certificate to trusted CA from argument $i.$fn = '$1'"
 	echo "$1" > $CADIR/$fn
 	openssl x509 -in $CADIR/$fn -noout -subject -dates
-	cp $fn $CADIR/
 	shift
 	i=$[[ $i + 1 ]]
 done
