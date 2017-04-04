@@ -6,7 +6,7 @@ yum -y install ca-certificates openssl && yum clean all
 if   [ "$ID" = "centos" ]; then
 	CADIR="/etcpki/ca-trus-source/anchors"
 	update-ca-trust force-enable
-	UPDATE_CA_COMMAND="update-ca-trust extract"
+	UPDATE_CA_COMMAND="update-ca-trust"
 elif [ "$ID" = "ubuntu" ]; then
 	CADIR="/usr/local/share/ca-certificates"
 	UPDATE_CA_COMMAND="update-ca-certificates"
@@ -19,14 +19,14 @@ mkdir -p $CADIR
 
 if [ "$CA" ]; then
 	echo "Add certificate to trusted CA from ENV.CA"
-	echo "$CA" > $CADIR/ca.crt
+	echo "$CA"  |sed 's/BEGIN CERTIFICATE/BEGIN_CERTIFICATE/g' | sed 's/END CERTIFICATE/END_CERTIFICATE/g' | sed 's/ /\n/g' | sed 's/BEGIN_CERTIFICATE/BEGIN CERTIFICATE/g' | sed 's/END_CERTIFICATE/END CERTIFICATE/g' > $CADIR/ca.crt
 	openssl x509 -in $CADIR/ca.crt -noout -subject -dates
 fi
 i=1
 while [ -n "$1" ]; do
 	fn="ca$i.crt"
 	echo "Add certificate to trusted CA from argument $i.$fn = '$1'"
-	echo "$1" > $CADIR/$fn
+	echo "$1" |sed 's/BEGIN CERTIFICATE/BEGIN_CERTIFICATE/g' | sed 's/END CERTIFICATE/END_CERTIFICATE/g' | sed 's/ /\n/g' | sed 's/BEGIN_CERTIFICATE/BEGIN CERTIFICATE/g' | sed 's/END_CERTIFICATE/END CERTIFICATE/g' > $CADIR/$fn
 	openssl x509 -in $CADIR/$fn -noout -subject -dates
 	shift
 	i=$[ $i + 1 ]
