@@ -8,6 +8,9 @@ if   [ "$ID" = "centos" ]; then
 	CADIR="/etcpki/ca-trus-source/anchors"
 elif [ "$ID" = "ubuntu" ]; then
 	CADIR="/usr/local/share/ca-certificates"
+else
+	echo "$0: ERROR: UNKNOWN OS '$ID'"
+	exit 1
 fi
 
 mkdir -p $CADIR
@@ -23,3 +26,5 @@ for crt in ls -1 /*crt; do
 	cp $crt $CADIR/
 done
 update-ca-certificates
+
+exit 0
