@@ -10,11 +10,9 @@ ENV LAUNCH_JBOSS_IN_BACKGROUND 1
 
 USER root
 
-RUN yum install -y epel-release && yum install -y jq xmlstarlet && yum clean all
-
 ADD add-trusted-certificates.sh /opt/jboss
 
-RUN ./add-trusted-certificates.sh "$CA"
+RUN yum install -y epel-release && yum install -y jq xmlstarlet && yum clean all && ./add-trusted-certificates.sh "$CA"
 
 USER jboss
 
