@@ -84,7 +84,8 @@ $UPDATE_CA_COMMAND
 if [ -n "$CHECK_CURL" ]; then
 	set -x
 	curl -v "$CHECK_CURL"
-	if [ $? != 0 ]; then
+	# return code 67: TLS bind is successfull but : curl: (67) LDAP remote: bind failed Success anonymous bind disallowed
+	if [ $? != 0 -a $?!=67 ]; then
 		echo "curl check failed! '$CHECK_CURL'"
 		exit 2
 	fi
