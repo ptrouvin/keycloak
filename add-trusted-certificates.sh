@@ -22,7 +22,7 @@ with arguments:
 IMPORTANT: always add '--' before inserting your certificates, otherwise the '------' used by PEM format will be badly interpreted by getopt
 
 EOF
-	exit 1; 
+	exit 1;
 }
 
 CHECK_CURL="$CHECK_CURL"
@@ -46,7 +46,7 @@ shift $((OPTIND-1))
 yum -y install ca-certificates openssl && yum clean all
 
 . /etc/os-release
-if   [ "$ID" = "centos" ]; then
+if   [ "$ID" = "centos" -o "$ID" = "rhel" ]; then
 	CADIR="/etc/pki/ca-trust/source/anchors"
 	update-ca-trust force-enable
 	UPDATE_CA_COMMAND="update-ca-trust"
