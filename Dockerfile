@@ -21,8 +21,11 @@ ENV JBOSS_HOME /opt/jboss/wildfly
 
 USER root
 
-RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && yum install -y jq xmlstarlet java-1.8.0-openjdk-devel augeas bsdtar unzip apr apr-devel apr-util apr-util-devel apr-util-ldap elinks krb5-workstation mailcap saxon && yum update -y && yum clean all
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && yum install -y jq wget xmlstarlet java-1.8.0-openjdk-devel augeas bsdtar unzip apr apr-devel apr-util apr-util-devel apr-util-ldap elinks krb5-workstation mailcap
+RUN yum install -y saxon.noarch || ( wget https://freefr.dl.sourceforge.net/project/saxon/Saxon-HE/9.8/SaxonHE9-8-0-14J.zip && unzip SaxonHE9-8-0-14J.zip saxon9he.jar && mkdir -p /usr/share/java/ && mv saxon9he.jar /usr/share/java/saxon.jar && rm -f Saxon*.zip )
 RUN yum remove -y tomcatjss
+
+RUN yum update -y && yum clean all && rm -rf /var/cache/yum/
 
 ADD add-trusted-certificates.sh /opt/jboss/
 
@@ -53,9 +56,6 @@ ENV LAUNCH_JBOSS_IN_BACKGROUND true
 # Set the JAVA_HOME variable to make it clear where Java is located
 ENV JAVA_HOME /usr/lib/jvm/java
 
-# Expose the ports we're interested in
-EXPOSE 8080
-
 RUN cd /opt/jboss/ && curl -sL https://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz | tar zx && mv /opt/jboss/keycloak-$KEYCLOAK_VERSION /opt/jboss/keycloak
 
 ADD docker-entrypoint.sh /opt/jboss/
@@ -77,6 +77,7 @@ RUN xmlstarlet ed --inplace \
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
+# Expose the ports we're interested in
 EXPOSE 8080
 
 ENTRYPOINT [ "/opt/jboss/docker-entrypoint.sh" ]
